@@ -10,7 +10,7 @@ import copy
 
 
 # Set URL, open and read the html page, and create the BeautifulSoup object.
-url = "https://www.fifa.com/worldcup/archive/russia2018/matches/"#"https://www.fifa.com/worldcup/archive/russia2018/matches/"
+url = "https://www.fifa.com/worldcup/archive/southafrica2010/matches/"#"https://www.fifa.com/worldcup/archive/brazil2014/matches/"
 req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 page = urlopen(req)
 html = page.read().decode("utf-8")
@@ -18,10 +18,35 @@ soup = BeautifulSoup(html, "html.parser")
 
 
 # Set up the team_list list that contains all the team names.
-team_list = ['Australia','IR Iran','Japan','Saudi Arabia','Korea Republic','Egypt','Morocco','Nigeria',
-             'Senegal','Tunisia','Mexico','Costa Rica','Panama','Argentina','Brazil','Colombia',
-             'Peru','Uruguay','Belgium','Croatia','Denmark','England','France','Germany',
-             'Iceland','Poland','Portugal','Russia','Serbia','Spain','Sweden','Switzerland']
+team_list = ['Belgium','France','Brazil','England','Portugal','Spain','Italy',
+             'Argentina','Uruguay','Denmark','Mexico','Germany','Switzerland',
+             'Croatia','Colombia','Netherlands','Wales','Sweden','Chile','USA',
+             'Poland','Senegal','Austria','Ukraine','Serbia','Tunisia','Peru','Japan',
+             'Turkey','Venezuela','IR Iran','Nigeria','Algeria','Morocco','Paraguay',
+             'Slovakia','Hungary','Russia','Korea Republic','Czech Republic','Australia',
+             'Norway','Romania','Scotland','Jamaica','Egypt','Republic of Ireland',
+             'Northern Ireland','Ghana','Costa Rica','Greece','Iceland','Ecuador',
+             'Finland','Cameroon','Bosnia and Herzegovina','Mali','Qatar',"Côte d'Ivoire",
+             'Burkina Faso','Congo DR','North Macedonia','Slovenia','Montenegro',
+             'Saudi Arabia','Albania','Honduras','Iraq','El Salvador','Canada','Bulgaria',
+             'Guinea','United Arab Emirates','Cabo Verde','South Africa','Curaçao',
+             'China PR','Panama','Syria','Oman','Bolivia','Benin','Haiti','Uganda','Israel',
+             'Uzbekistan','Zambia','Gabon','Belarus','Armenia','Georgia','Vietnam','Lebanon',
+             'Congo','Jordan','Luxembourg','Cyprus','Bahrain','Kyrgyz Republic','Madagascar',
+             'Mauritania','Kenya','Trinidad and Tobago','Palestine','India','Thailand',
+             'Zimbabwe','Guinea-Bissau','Korea DPR','Azerbaijan','Namibia','Niger',
+             'Faroe Islands','Sierra Leone','Malawi','Estonia','Mozambique',
+             'Central African Republic','Libya','Kosovo','Tajikistan','New Zealand','Sudan',
+             'Kazakhstan','Philippines','Angola','Guatemala','Antigua and Barbuda','Rwanda',
+             'Turkmenistan','Comoros','Equatorial Guinea','Togo','Lithuania',
+             'St. Kitts and Nevis','Suriname','Tanzania','Latvia','Myanmar','Ethiopia',
+             'Chinese Taipei','Burundi','Solomon Islands','Hong Kong','Yemen',
+             'Lesotho','Nicaragua','Kuwait','Afghanistan','Botswana']
+
+#['Australia','IR Iran','Japan','Saudi Arabia','Korea Republic','Egypt','Morocco','Nigeria',
+ #            'Senegal','Tunisia','Mexico','Costa Rica','Panama','Argentina','Brazil','Colombia',
+  #           'Peru','Uruguay','Belgium','Croatia','Denmark','England','France','Germany',
+   #          'Iceland','Poland','Portugal','Russia','Serbia','Spain','Sweden','Switzerland']
 
 # Use the getText() function from the bs4 library to convert the BeautifulSoup object to a string.
 all_text = soup.getText()
@@ -41,35 +66,39 @@ first_team_list = []
 # second_team_list is a list that will contain the team name for the second number in the score.
 second_team_list = []
 
-
+previous_e=0
 # Loop through the all_text variable to build the score_list, first_team_list and
 # second_team_list game lists. This is done using search() and finditer() from the re module.
 # First, we loop through to find the score pattern "#-#" in all_text.
 for score_match in re.finditer("[0-9]-[0-9]", all_text):
-    s = score_match.start()-40
+    s = score_match.start()-45
     e = score_match.end()
+    found1 = 0
+    found2 = 0
 
     # If the found score pattern does not have parentheses surrounding it, then the score is the
     #  actual score. If parentheses are found, then the score pattern is for the penalty shootout,
     #  which we do not want to keep as a score.
-    if paren.search(all_text[s+39:e+1]) is None:
-        score_list.append(all_text[s+40:e])
+    if paren.search(all_text[s+44:e+1]) is None:
+        score_list.append(all_text[s+45:e])
 
     # Next, we loop through 40 characters before the found score pattern up until the pattern in order to
     #  find the pattern which matches a team name in the team_list list, and append to first_team_list.
     for team1 in re.finditer(".*", all_text[s:e]):
         s2 = team1.start()
         e2 = team1.end()
-        if all_text[s:e][s2:e2] in team_list:
+        if (all_text[s:e][s2:e2] in team_list) and (found1 != 1):
             first_team_list.append(all_text[s:e][s2:e2])
+            found1 = 1
 
     # Finally, we do a similar loop from the end of the found score pattern up until 40 characters after
     #  the found score pattern in order to find the second team in the match to append to second_team_list.
-    for team2 in re.finditer(".*", all_text[e:e+40]):
+    for team2 in re.finditer(".*", all_text[e:e+45]):
         s3 = team2.start()
         e3 = team2.end()
-        if all_text[e:e+40][s3:e3] in team_list:
-            second_team_list.append(all_text[e:e+40][s3:e3])
+        if (all_text[e:e+45][s3:e3] in team_list) and (found2 != 1):
+            second_team_list.append(all_text[e:e+45][s3:e3])
+            found2 = 1
 
 print(len(first_team_list),len(score_list),len(second_team_list))
 print(first_team_list)
