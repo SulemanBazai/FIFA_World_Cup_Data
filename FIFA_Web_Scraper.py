@@ -9,11 +9,9 @@ import pandas as pd
 import copy
 
 
-
-
-
 # Set URL list
-url_list = ["https://www.fifa.com/worldcup/archive/germany2006/matches/",
+url_list = ["https://www.fifa.com/worldcup/archive/koreajapan2002/matches/",
+            "https://www.fifa.com/worldcup/archive/germany2006/matches/",
             "https://www.fifa.com/worldcup/archive/southafrica2010/matches/",
             "https://www.fifa.com/worldcup/archive/brazil2014/matches/",
             "https://www.fifa.com/worldcup/archive/russia2018/matches/"]
