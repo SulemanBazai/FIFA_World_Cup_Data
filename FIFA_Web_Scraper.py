@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen, Request
 import re
 import pandas as pd
-import copy
 
 
 # Set URL list
@@ -74,16 +73,6 @@ for url in url_list:
     # Loop through the all_text variable to find the score and team names for each match.
     # This is done using search() and finditer() from the re module.
 
-    # match_count keeps track of which count of match in the URL we are processing.
-    # For example, 1 is the first match, 2 is second, etc. There are 64 matches in a World Cup.
-    # A team reaching the finals will have played 7 total games when the World Cup has finished.
-    # Because of this, each team (regardless of whether they were in the World Cup or not, and
-    #  regardless of whether they made it to the finals) will need 7 data points for their score
-    #   per World Cup. This is to ensure the graphing animation works appropriately.
-    # There will also be a score of 0 in the first spot for each team since this is before the first
-    #  World Cup match has been played for the first World Cup in the graph animation.
-    match_count = 0
-
     # First, we loop through to find the score pattern "#-#" in all_text.
     for score_match in re.finditer("[0-9]-[0-9]", all_text):
         s = score_match.start() - 45
@@ -99,7 +88,6 @@ for url in url_list:
             score = all_text[s + 45:e]
             team1_score = score.split("-")[0]
             team2_score = score.split("-")[1]
-            match_count += 1
 
             # The score is valid, so we also need the team names.
 
@@ -123,8 +111,6 @@ for url in url_list:
                     team2 = all_text[e:e + 45][s3:e3]
                     found2 = 1
 
-        # print(team1,team1_score,"    ",team2_score,team2)
-
         # Break out of current match loop since the score returned was not valid.
         # This score was most likely a penalty score case with (#-#)
         else:
@@ -137,7 +123,11 @@ for url in url_list:
             score_dict[team2].append(int(team2_score) + score_dict[team2][-1])
 
     # Loop through the score dictionary that will be building the dataframe. This is to add a 0 score
-    #  for when a team does not play in a match.
+    #  for when a team does not play in a match. There are 64 matches in a World Cup.
+    #   A team reaching the finals will have played 7 total games when the World Cup has finished.
+    #    Because of this, each team (regardless of whether they were in the World Cup or not,
+    #    and regardless of whether they made it to the finals) will need 7 data points for their
+    #    score per World Cup. This is to ensure the graphing animation works appropriately.
     for key in score_dict:
         try:
             if score_dict[key][url_count*7] == "":
@@ -148,12 +138,14 @@ for url in url_list:
             while len(score_dict[key]) != ((url_count * 7) + 1):
                 score_dict[key].append(score_dict[key][-1])
 
-print(score_dict)
+#print(score_dict)
 
+# Finally, create the dataframe using the score_dict dictionary.
+#  The columns are Name, Score, and (match) Index.
 df = pd.DataFrame(columns=['Name', 'Score', 'Index'])
 for key in score_dict:
     for i in range(len(score_dict[key])):
         df2 = pd.DataFrame([[key, score_dict[key][i], i]], columns=['Name', 'Score', 'Index'])
         df = df.append(df2)
 
-print(df)
+#print(df)

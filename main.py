@@ -1,16 +1,19 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+# This is the main script that calls in the FIFA_Web_Scraper and Animation_Frame_Builder
+#  scripts to build, display, and save the animation as a .gif file.
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+# Import Libraries
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import Animation_Frame_Builder as grapher
 
 
-# Press the green button in the gutter to run the script.
+# main entry point to run the FIFA_Web_Scraper and Animation_Frame_Builder scripts to
+#  build, display, and save the animation as a .gif file.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    animator = grapher.animator
+    plt.show()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Save the animation as a .gif file
+    Writer = animation.PillowWriter(fps=1.6)
+    animator.save('/Users/sulemanbazai/PycharmProjects/FIFA World Cup Data/goal_animation.gif', writer=Writer)
