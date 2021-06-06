@@ -16,4 +16,4 @@ if __name__ == '__main__':
 
     # Save the animation as a .gif file
     Writer = animation.PillowWriter(fps=1.6)
-    animator.save('/Users/sulemanbazai/PycharmProjects/FIFA World Cup Data/goal_animation.gif', writer=Writer)
+    animator.save('/Users/sulemanbazai/PycharmProjects/FIFA_World_Cup_Data/goal_animation.gif', writer=Writer)
