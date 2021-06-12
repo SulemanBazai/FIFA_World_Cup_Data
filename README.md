@@ -15,3 +15,7 @@ BeautifulSoup used for parsing through the HTML returned from the FIFA website.<
 re used for performing regular expression matching operations.<br />
 pandas used for creating the DataFrame holding the score data.<br />
 matplotlib used for creating the animated bar chart race visualization.
+
+
+## Bar Chart Race Animation
+![](goal_animation.gif)
